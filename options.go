@@ -1,6 +1,7 @@
 package otelpgx
 
 import (
+	"context"
 	"time"
 
 	"go.opentelemetry.io/otel/attribute"
@@ -63,8 +64,8 @@ func WithTrimSQLInSpanName() Option {
 }
 
 // SpanNameFunc is a function that can be used to generate a span name for a
-// SQL. The function will be called with the SQL statement as a parameter.
-type SpanNameFunc func(stmt string) string
+// SQL. The function will be called with the current context and the SQL statement as a parameter.
+type SpanNameFunc func(ctx context.Context, stmt string) string
 
 // WithSpanNameFunc will use the provided function to generate the span name for
 // a SQL statement. The function will be called with the SQL statement as a
