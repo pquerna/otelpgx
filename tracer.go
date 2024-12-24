@@ -238,7 +238,7 @@ func (t *Tracer) TraceQueryStart(ctx context.Context, conn *pgx.Conn, data pgx.T
 	if t.logSQLStatement {
 		opts = append(opts, trace.WithAttributes(
 			semconv.DBQueryText(data.SQL),
-			semconv.DBOperationName(t.sqlOperationName(data.SQL)),
+			semconv.DBOperationName(t.sqlOperationName(ctx, data.SQL)),
 		))
 
 		if t.includeParams {
@@ -365,7 +365,7 @@ func (t *Tracer) TraceBatchQuery(ctx context.Context, conn *pgx.Conn, data pgx.T
 	if t.logSQLStatement {
 		opts = append(opts, trace.WithAttributes(
 			semconv.DBQueryText(data.SQL),
-			semconv.DBOperationName(t.sqlOperationName(data.SQL)),
+			semconv.DBOperationName(t.sqlOperationName(ctx, data.SQL)),
 		))
 
 		if t.includeParams {
@@ -461,7 +461,7 @@ func (t *Tracer) TracePrepareStart(ctx context.Context, conn *pgx.Conn, data pgx
 		opts = append(opts, connectionAttributesFromConfig(conn.Config())...)
 	}
 
-	opts = append(opts, trace.WithAttributes(semconv.DBOperationName(t.sqlOperationName(data.SQL))))
+	opts = append(opts, trace.WithAttributes(semconv.DBOperationName(t.sqlOperationName(ctx, data.SQL))))
 
 	if t.logSQLStatement {
 		opts = append(opts, trace.WithAttributes(semconv.DBQueryText(data.SQL)))
